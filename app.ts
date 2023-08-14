@@ -1,11 +1,10 @@
-import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 
 import dbConnection from './src/DB/dbConnetion';
 import { Routes } from './src/interfaces/routes.interface';
 
-class Server {
+class App {
   public app: express.Application;
   public port: number | string;
   public env: string;
@@ -23,19 +22,25 @@ class Server {
   private connectToDatabase() {
     dbConnection();
   }
-  
+
   private initializeMiddlewares() {
     if (this.env === 'development') {
       this.app.use(morgan('dev'));
     }
     this.app.use(express.json());
   }
-  
+
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
-      this.app.use('/', route.router);
+      this.app.use('/api/v1', route.router);
+    });
+  }
+
+  public listen() {
+    this.app.listen(this.port, () => {
+      console.log(`App listening in ${process.env.NODE_ENV} mode on the port ${this.port}`);
     });
   }
 }
 
-export default Server;
+export default App;
