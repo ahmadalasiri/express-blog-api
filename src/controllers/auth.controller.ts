@@ -13,17 +13,15 @@ export class AuthController {
  
 
   public signup = asyncHandler(async (req: Request, res: Response) => {
-    let response = await this.authService.signup(req.body);
-    res.status(201).json(response);
+    let {user, token} = await this.authService.signup(req.body);
+    const userData = { _id: user._id, email: user.email, username: user.username };
+    res.status(201).json( { data: userData, token });
   });
 
   public login = asyncHandler(async (req: Request, res: Response ) => {
     let { emailOrUsername, password } = req.body;
-    
     let {user, token} = await this.authService.login(emailOrUsername, password);
-   
     const userData = { _id: user._id, email: user.email, username: user.username };
-
     res.status(200).json({ data: userData, token });
   });
 }
