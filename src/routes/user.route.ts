@@ -20,7 +20,7 @@ class UserRoute implements Routes {
     this.router
       .route(`${this.path}/:id`)
       .get(this.userController.getUser)
-      .patch(this.userController.updateUser)
+      .put(this.userController.updateUser)
       .delete(this.userController.deleteUser);
   }
 }
