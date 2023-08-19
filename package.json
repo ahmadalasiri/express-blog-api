@@ -2,10 +2,10 @@
   "name": "express-blog-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "nodemon server.ts",
+    "start:prod": "NODE_ENV=production  ts-node server.ts"
   },
   "author": "Ahmed Mostata",
   "license": "ISC",
