@@ -3,6 +3,7 @@ import morgan from 'morgan';
 
 import dbConnection from './src/DB/dbConnetion';
 import { Routes } from './src/interfaces/routes.interface';
+import { errorMiddleware, notFound } from './src/middleware/errors';
 
 class App {
   public app: express.Application;
@@ -17,6 +18,7 @@ class App {
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
+    this.initializeErrorHandling();
   }
 
   private connectToDatabase() {
@@ -34,6 +36,10 @@ class App {
     routes.forEach(route => {
       this.app.use('/api/v1', route.router);
     });
+  }
+  private initializeErrorHandling() {
+    this.app.use(notFound);
+    this.app.use(errorMiddleware);
   }
 
   public listen() {
