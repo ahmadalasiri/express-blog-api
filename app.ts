@@ -21,6 +21,10 @@ class App {
     this.initializeErrorHandling();
   }
 
+  public getServer() {
+    return this.app;
+  }
+
   private connectToDatabase() {
     dbConnection();
   }

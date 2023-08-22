@@ -17,8 +17,8 @@ let userSchema: Schema<IUser & Document> = new Schema(
       type: String,
       require: true,
       unique: true,
-      minlenght: 2,
-      maxlenght: 100,
+      minlength: 2,
+      maxlength: 100,
       trim: true,
     },
 
@@ -26,8 +26,8 @@ let userSchema: Schema<IUser & Document> = new Schema(
       type: String,
       unique: true,
       require: [true, 'Email is required'],
-      minlenght: 5,
-      maxlenght: 100,
+      minlength: 5,
+      maxlength: 100,
       trim: true,
     },
 
