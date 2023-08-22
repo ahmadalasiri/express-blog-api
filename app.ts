@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import dbConnection from './src/DB/dbConnetion';
 import { Routes } from './src/interfaces/routes.interface';
 import { errorMiddleware, notFound } from './src/middleware/errors';
+import './src/middleware/errors/unhandledRejection';
 
 class App {
   public app: express.Application;
@@ -47,7 +48,7 @@ class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    return this.app.listen(this.port, () => {
       console.log(`App listening in ${process.env.NODE_ENV} mode on the port ${this.port}`);
     });
   }

@@ -5,6 +5,7 @@ const dbConnection = async () => {
     console.error('DB_URI environment variable is not defined ⚠️');
     process.exit(1);
   }
+
   mongoose
     .connect(process.env.DB_URI as string)
     .then(conn => {

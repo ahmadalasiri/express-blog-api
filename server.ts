@@ -7,4 +7,4 @@ dotenv.config();
 
 let app = new App([new UserRoute()]);
 
-app.listen();
+export let server = app.listen();
