@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import dbConnection from './src/DB/dbConnetion';
 import { Routes } from './src/interfaces/routes.interface';
 import { errorMiddleware, notFound } from './src/middleware/errors';
-import './src/middleware/errors/unhandledRejection';
+import './src/middleware/errors/shutdownHandler';
 
 class App {
   public app: express.Application;
