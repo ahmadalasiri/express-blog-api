@@ -2,6 +2,12 @@ import { Router } from 'express';
 
 import UserController from '../controller/user.controller';
 import { Routes } from '../interfaces/routes.interface';
+import {
+  createUserValidator,
+  deleteUserValidator,
+  getUserValidator,
+  updateUserValidator,
+} from '../utils/validation/user.validator';
 
 class UserRoute implements Routes {
   public path = '/users';
@@ -15,13 +21,13 @@ class UserRoute implements Routes {
     this.router
       .route(`${this.path}`)
       .get(this.userController.getUsers)
-      .post(this.userController.createUser);
+      .post(createUserValidator, this.userController.createUser);
 
     this.router
       .route(`${this.path}/:id`)
-      .get(this.userController.getUser)
-      .put(this.userController.updateUser)
-      .delete(this.userController.deleteUser);
+      .get(getUserValidator, this.userController.getUser)
+      .put(updateUserValidator, this.userController.updateUser)
+      .delete(deleteUserValidator, this.userController.deleteUser);
   }
 }
 
