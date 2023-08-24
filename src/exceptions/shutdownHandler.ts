@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-import { server } from '../../../server';
+import { server } from '../../server';
 
 // Graceful shutdown //
-// -------------------------------------------- //
+
 // Handle process kill signal
 // Stop new requests from client
 // Close all data process

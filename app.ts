@@ -2,9 +2,10 @@ import express from 'express';
 import morgan from 'morgan';
 
 import dbConnection from './src/DB/dbConnetion';
+import { notFound } from './src/exceptions/notFound';
+import './src/exceptions/shutdownHandler';
 import { Routes } from './src/interfaces/routes.interface';
-import { errorMiddleware, notFound } from './src/middleware/errors';
-import './src/middleware/errors/shutdownHandler';
+import { errorMiddleware } from './src/middleware/errors';
 
 class App {
   public app: express.Application;

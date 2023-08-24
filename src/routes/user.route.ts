@@ -7,12 +7,13 @@ import {
   deleteUserValidator,
   getUserValidator,
   updateUserValidator,
-} from '../utils/validation/user.validator';
+} from '../middleware/validation';
 
 class UserRoute implements Routes {
   public path = '/users';
   public router = Router();
   public userController = new UserController();
+
   constructor() {
     this.insitializeRoutes();
   }
@@ -31,4 +32,4 @@ class UserRoute implements Routes {
   }
 }
 
-export default UserRoute;
+export { UserRoute };

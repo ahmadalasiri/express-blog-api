@@ -6,6 +6,8 @@ const validateEnv = () => {
     NODE_ENV: str(),
     BASE_URL: url(),
     DB_URI: str(),
+    JWT_SECRET: str(),
+    JWT_EXPIRATION: str(),
   });
 };
 

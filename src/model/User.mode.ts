@@ -9,10 +9,6 @@ let userSchema: Schema<IUser & Document> = new Schema(
       required: [true, 'name required'],
       trim: true,
     },
-    slug: {
-      type: String,
-      lowercase: true,
-    },
     username: {
       type: String,
       required: true,
@@ -34,8 +30,6 @@ let userSchema: Schema<IUser & Document> = new Schema(
     password: {
       type: String,
       required: true,
-      min: 8,
-      trim: true,
     },
     profilePicture: {
       type: Object,

@@ -11,7 +11,7 @@ class UserController {
   });
 
   public getUsers = asyncHandler(async (_: Request, res: Response) => {
-    let user = await User.find();
+    let user = await User.find({});
     res.status(200).json({ user });
   });
 
