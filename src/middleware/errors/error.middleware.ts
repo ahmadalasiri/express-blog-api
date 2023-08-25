@@ -58,18 +58,22 @@ export const errorMiddleware = (
   if (process.env.NODE_ENV === 'development') {
     sendForDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = { ...err };
+    for (const prop in err) {
+      Object.defineProperty(err, prop, {
+        enumerable: true,
+      });
+    }
 
     if (err.name === 'CastError') {
-      error = handelCastErrorDB(err);
+      err = handelCastErrorDB(err);
     }
     if (err.code === 11000) {
-      error = handelDuplicateFieldsDB(err);
+      err = handelDuplicateFieldsDB(err);
     }
     if (err.name === 'ValidationError') {
-      error = handelValidationErrorDB(err);
+      err = handelValidationErrorDB(err);
     }
 
-    sendForProd(error, res);
+    sendForProd(err, res);
   }
 };
