@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
 
+import env from '../../src/utils/validateEnv';
+
 const dbConnection = async () => {
   mongoose
-    .connect(process.env.DB_URI!)
+    .connect(env.DB_URI)
     .then(conn => {
       console.log(`Database Connected ✌️ ${conn.connection.host} `);
     })

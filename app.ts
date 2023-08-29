@@ -6,6 +6,7 @@ import { notFound } from './src/exceptions/notFound';
 import './src/exceptions/shutdownHandler';
 import { Routes } from './src/interfaces/routes.interface';
 import { errorMiddleware } from './src/middleware/errors';
+import env from './src/utils/validateEnv';
 
 class App {
   public app: express.Application;
@@ -14,7 +15,7 @@ class App {
 
   constructor(routes: Routes[]) {
     this.app = express();
-    this.port = process.env.PORT || 3000;
+    this.port = env.PORT || 3000;
     this.env = process.env.NODE_ENV || 'development';
 
     this.connectToDatabase();

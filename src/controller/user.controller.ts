@@ -30,7 +30,8 @@ class UserController {
   public deleteUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     let user = await User.findByIdAndDelete(req.params.id);
     if (!user) return next(new HttpException(404, 'No user found'));
-    res.status(204);
+    console.log('delete fun');
+    res.status(204).send;
   });
 }
 
