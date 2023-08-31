@@ -43,7 +43,7 @@ let userSchema: Schema<IUser & Document> = new Schema(
 
     role: {
       type: String,
-      enum: ['user', 'admin'],
+      enum: ['user', 'admin', 'moderator'],
       default: 'user',
     },
     active: {

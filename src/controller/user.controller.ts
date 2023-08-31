@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 
@@ -6,7 +7,7 @@ import User from '../model/User.mode';
 
 class UserController {
   public createUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    let { name, email, username, password } = req.body;
+    let { email, username, password } = req.body;
 
     let existing = await User.findOne({ $or: [{ email }, { username }] });
     if (existing) {
@@ -20,23 +21,38 @@ class UserController {
       } else return next(new HttpException(409, 'Username already in use'));
     }
 
-    let user = await User.create({ name, email, username, password });
+    password = await bcrypt.hash(password, 10);
+    let user = await User.create(req.body);
 
     res.status(201).json({ user });
   });
 
   public getUsers = asyncHandler(async (_: Request, res: Response) => {
-    let user = await User.find({});
-    res.status(200).json({ user });
+    let users = await User.find({}).select('-password -updatedAt -__v');
+    res.status(200).json({ results: users.length, users });
   });
 
   public getUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    let user = await User.findById(req.params.id);
+    let user = await User.findById(req.params.id).select('-password -updatedAt -__v');
     if (!user) return next(new HttpException(404, 'No user found'));
     res.status(200).json({ user });
   });
 
   public updateUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.username || req.body.email) {
+      let existing = await User.findOne({ $or: [req.body.email, req.body.username] });
+      if (existing) {
+        if (existing.email === req.body.email) {
+          return next(
+            new HttpException(
+              409,
+              `E-Mail address ${req.body.email} is already exists, please pick a different one.`
+            )
+          );
+        } else return next(new HttpException(409, `Username ${req.body.username} already in use`));
+      }
+    }
+
     let user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!user) return next(new HttpException(404, 'No user found'));
     res.status(200).json({ user });
@@ -45,8 +61,7 @@ class UserController {
   public deleteUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     let user = await User.findByIdAndDelete(req.params.id);
     if (!user) return next(new HttpException(404, 'No user found'));
-    console.log('delete fun');
-    res.status(204).send;
+    res.status(204).send();
   });
 }
 

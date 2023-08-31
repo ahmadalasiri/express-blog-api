@@ -7,15 +7,10 @@ import User from '../../model/User.mode';
 afterAll(async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
-  jest.clearAllMocks();
   server.close();
 });
 
 beforeEach(async () => {
-  await User.deleteMany({});
-});
-
-afterEach(async () => {
   await User.deleteMany({});
 });
 
@@ -40,6 +35,20 @@ describe('Authentication', () => {
     it('should return 409 E-Mail address is already exists', async () => {
       await request(server).post('/api/v1/auth/signup').send(newUserData);
       const response = await request(server).post('/api/v1/auth/signup').send(newUserData);
+
+      expect(response.status).toBe(409);
+      expect(response.body.message).toBeDefined();
+    });
+
+    it('should return 409 Username already in use', async () => {
+      await request(server).post('/api/v1/auth/signup').send(newUserData);
+      const response = await request(server).post('/api/v1/auth/signup').send({
+        name: newUserData.name,
+        email: 'newEmail@gmail.com',
+        username: newUserData.username,
+        password: newUserData.password,
+        confirmPassword: newUserData.confirmPassword,
+      });
 
       expect(response.status).toBe(409);
       expect(response.body.message).toBeDefined();
