@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { server } from '../../server';
+import { server } from '..';
 
 // Graceful shutdown //
 
@@ -11,7 +11,6 @@ import { server } from '../../server';
 
 process.on('SIGINT', () => {
   console.log('👋 SIGINT RECEIVED. Shutting down gracefully');
-  console.log('Closing http server.');
   server.close(() => {
     mongoose.connection
       .close()

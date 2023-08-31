@@ -2,13 +2,13 @@
   "name": "express-blog-api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "nodemon": "nodemon",
-    "start:dev": "cross-env NODE_ENV=testing nodemon server.ts",
-    "start:test": "cross-env NODE_ENV=testing   jest",
-    "start:prod": "cross-env NODE_ENV=production  nodemon server.ts",
-    "debug": "ndb server.ts"
+    "start": "ts-node ./src/index.ts",
+    "start:dev": "cross-env NODE_ENV=development nodemon  ./src/index.ts",
+    "start:test": "cross-env NODE_ENV=testing  jest --detectOpenHandles --watchAll",
+    "start:prod": "cross-env NODE_ENV=production  nodemon  ./src/index.ts",
+    "debug": "ndb  ./src/index.ts"
   },
   "author": "Ahmed Mostata",
   "license": "ISC",

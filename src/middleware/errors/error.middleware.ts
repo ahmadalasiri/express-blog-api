@@ -57,7 +57,7 @@ export const errorMiddleware = (
 
   if (process.env.NODE_ENV === 'development') {
     sendForDev(err, res);
-  } else if (process.env.NODE_ENV === 'production') {
+  } else if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'testing') {
     for (const prop in err) {
       Object.defineProperty(err, prop, {
         enumerable: true,

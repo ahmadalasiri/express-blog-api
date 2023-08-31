@@ -1,12 +1,12 @@
 import express from 'express';
 import morgan from 'morgan';
 
-import dbConnection from './src/DB/dbConnetion';
-import { notFound } from './src/exceptions/notFound';
-import './src/exceptions/shutdownHandler';
-import { Routes } from './src/interfaces/routes.interface';
-import { errorMiddleware } from './src/middleware/errors';
-import env from './src/utils/validateEnv';
+import dbConnection from './DB/dbConnetion';
+import { notFound } from './exceptions/notFound';
+import './exceptions/shutdownHandler';
+import { Routes } from './interfaces/routes.interface';
+import { errorMiddleware } from './middleware/errors';
+import env from './utils/validateEnv';
 
 class App {
   public app: express.Application;

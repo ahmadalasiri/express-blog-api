@@ -5,8 +5,23 @@ import HttpException from '../exceptions/HttpException';
 import User from '../model/User.mode';
 
 class UserController {
-  public createUser = asyncHandler(async (req: Request, res: Response) => {
-    let user = await User.create(req.body);
+  public createUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    let { name, email, username, password } = req.body;
+
+    let existing = await User.findOne({ $or: [{ email }, { username }] });
+    if (existing) {
+      if (existing.email === email) {
+        return next(
+          new HttpException(
+            409,
+            `E-Mail address ${email} is already exists, please pick a different one.`
+          )
+        );
+      } else return next(new HttpException(409, 'Username already in use'));
+    }
+
+    let user = await User.create({ name, email, username, password });
+
     res.status(201).json({ user });
   });
 
