@@ -1,17 +1,15 @@
 import express from 'express';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
 
 import swaggerDocument from '../swagger.json';
 import dbConnection from './DB/dbConnetion';
 import { notFound } from './exceptions/notFound';
 import './exceptions/shutdownHandler';
 import { Routes } from './interfaces/routes.interface';
+import logger from './log';
 import { errorMiddleware } from './middleware/errors';
 import env from './utils/validateEnv';
-
-const swaggerDocument_yaml = YAML.load(`${process.cwd()}/swagger.yaml`);
 
 class App {
   public app: express.Application;
@@ -53,7 +51,6 @@ class App {
 
   private initializeSwagger() {
     if (this.env === 'development') {
-      this.app.use('/yaml-api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument_yaml));
       this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
   }
@@ -65,7 +62,7 @@ class App {
 
   public listen() {
     return this.app.listen(this.port, () => {
-      console.log(`App listening in ${process.env.NODE_ENV} mode on the port ${this.port}`);
+      logger.info(`🚀 App listening in ${process.env.NODE_ENV} mode on the port ${this.port}`);
     });
   }
 }

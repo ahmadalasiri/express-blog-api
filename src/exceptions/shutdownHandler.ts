@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import { server } from '..';
+import logger from '../log';
 
 // Graceful shutdown //
 
@@ -10,13 +11,13 @@ import { server } from '..';
 // Exit from process
 
 process.on('SIGINT', () => {
-  console.log('👋 SIGINT RECEIVED. Shutting down gracefully');
+  logger.error('👋 SIGINT RECEIVED. Shutting down gracefully');
   server.close(() => {
     mongoose.connection
       .close()
       .then(() => {
-        console.log('MongoDb connection closed.');
-        console.log('💥 Process terminated!');
+        logger.error('MongoDb connection closed.');
+        logger.error('💥 Process terminated!');
         process.exit(1);
       })
       .catch(err => {
@@ -27,15 +28,15 @@ process.on('SIGINT', () => {
 });
 
 process.on('unhandledRejection', (err: Error) => {
-  console.log(err.name, err.message);
-  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+  logger.error(err.name, err.message);
+  logger.error('UNHANDLED REJECTION! 💥 Shutting down...');
   server.close(() => {
     process.exit(1);
   });
 });
 // uncaught exception in typescript
 process.on('unhandledRejection', (err: Error) => {
-  console.log(err.name, err.message);
-  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+  logger.error(err.name, err.message);
+  logger.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   process.exit(1);
 });
