@@ -19,6 +19,10 @@ const handelValidationErrorDB = (err: HttpException) => {
   return new HttpException(400, message);
 };
 
+const handleJwtInvalidSignture = () => new HttpException(401, "Invalid token, please login again..");
+
+const handleJwtExpired = () => new HttpException(401, "Expired token, please login again..");
+
 const sendForDev = (err: HttpException, res: Response) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -73,6 +77,9 @@ export const errorMiddleware = (
     if (err.name === 'ValidationError') {
       err = handelValidationErrorDB(err);
     }
+
+    if (err.name === "JsonWebTokenError") err = handleJwtInvalidSignture();
+    if (err.name === "TokenEpiredError") err = handleJwtExpired();
 
     sendForProd(err, res);
   }

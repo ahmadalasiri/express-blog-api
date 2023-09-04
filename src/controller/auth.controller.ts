@@ -4,7 +4,7 @@ import asyncHandler from 'express-async-handler';
 import { Document } from 'mongoose';
 
 import HttpException from '../exceptions/HttpException';
-import IUser from '../interfaces/User.interface';
+import { IUser } from '../interfaces/User.interface';
 import User from '../model/User.mode';
 import { createToken } from '../utils/createToken';
 

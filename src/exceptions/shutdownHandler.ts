@@ -28,15 +28,15 @@ process.on('SIGINT', () => {
 });
 
 process.on('unhandledRejection', (err: Error) => {
-  logger.error(err.name, err.message);
+  logger.error(err.name, { message: err.message });
   logger.error('UNHANDLED REJECTION! 💥 Shutting down...');
   server.close(() => {
     process.exit(1);
   });
 });
-// uncaught exception in typescript
-process.on('unhandledRejection', (err: Error) => {
-  logger.error(err.name, err.message);
+// uncaught exception  - synchronous errors
+process.on('uncaughtException', (err: Error) => {
+  logger.error(err.name, { message: err.message })
   logger.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   process.exit(1);
 });

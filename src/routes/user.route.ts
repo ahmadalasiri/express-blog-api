@@ -8,6 +8,7 @@ import {
   getUserValidator,
   updateUserValidator,
 } from '../middleware/validation';
+import { verifyToken } from '../middleware/auth.middleware';
 
 class UserRoute implements Routes {
   public path = '/users';
@@ -19,6 +20,7 @@ class UserRoute implements Routes {
   }
 
   private insitializeRoutes() {
+    this.router.use(verifyToken)
     this.router
       .route(`${this.path}`)
       .get(this.userController.getUsers)

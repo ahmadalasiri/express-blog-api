@@ -1,6 +1,6 @@
-export default interface IUser {
+export interface IUser {
+  _id?: string
   name: string;
-  slug: string;
   username: string;
   email: string;
   password: string;

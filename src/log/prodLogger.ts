@@ -20,7 +20,7 @@ const prodLogger = winston.createLogger({
       level: 'info',
       db: env.DB_URI,
       capped: true,
-      cappedSize: 10000000,
+      cappedSize: 10000000, // 10MB
       options: { useUnifiedTopology: true },
     }),
   ],

@@ -10,8 +10,10 @@ const dbConnection = async () => {
       logger.info(`Database Connected ✌️ ${conn.connection.host} `);
     })
     .catch(err => {
-      console.error(`error: ${err}`);
-      process.exit(1);
+      logger.error(`Error: ${err.message}`);
+      setTimeout(() => {
+        process.exit(1);
+      }, 100); // Delay the process
     });
 };
 
