@@ -3,16 +3,9 @@ import request from 'supertest';
 
 import { server } from '../..';
 import User from '../../model/User.mode';
+import { createToken } from '../../utils/createToken';
 
-afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  server.close();
-});
-
-beforeEach(async () => {
-  await User.deleteMany({});
-});
+let token: string;
 
 const newUserData = {
   name: 'John Doe',
@@ -22,10 +15,37 @@ const newUserData = {
   confirmPassword: 'password123',
 };
 
+const admin = {
+  name: 'admin',
+  username: 'admin',
+  role: 'admin',
+  email: 'admin@gmail.com',
+  password: 'password123',
+  confirmPassword: 'password123',
+};
+
+afterAll(async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  server.close();
+});
+
+beforeEach(async () => {
+  const user = await User.create(admin);
+  token = createToken(user._id);
+});
+
+afterEach(async () => {
+  await User.deleteMany({});
+});
+
 describe('user', () => {
   describe('POST /api/v1/users', () => {
     it('should create a new user', async () => {
-      const response = await request(server).post('/api/v1/users').send(newUserData);
+      const response = await request(server)
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newUserData);
 
       expect(response.status).toBe(201);
       expect(response.body.user).toBeDefined();
@@ -34,7 +54,10 @@ describe('user', () => {
     it('should return 409 if email already exists', async () => {
       // Create a user with the same email
       await User.create(newUserData);
-      const response = await request(server).post('/api/v1/users').send(newUserData);
+      const response = await request(server)
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newUserData);
 
       expect(response.status).toBe(409);
       expect(response.body.message).toMatch('E-Mail address John@gmail.com is already exists');
@@ -44,13 +67,16 @@ describe('user', () => {
       // Create a user with the same username
       await User.create(newUserData);
 
-      const response = await request(server).post('/api/v1/users').send({
-        name: 'John Doe',
-        email: 'newEmail@gmail.com',
-        username: 'JohnDoe',
-        password: 'password123',
-        confirmPassword: 'password123',
-      });
+      const response = await request(server)
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'John Doe',
+          email: 'newEmail@gmail.com',
+          username: 'JohnDoe',
+          password: 'password123',
+          confirmPassword: 'password123',
+        });
 
       expect(response.status).toBe(409);
       expect(response.body.message).toMatch('Username already in use');
@@ -76,10 +102,12 @@ describe('user', () => {
         },
       ]);
 
-      const response = await request(server).get('/api/v1/users');
+      const response = await request(server)
+        .get('/api/v1/users')
+        .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.users).toHaveLength(2);
+      expect(response.body.users).toHaveLength(3);
     });
   });
 
@@ -88,7 +116,9 @@ describe('user', () => {
       // Create a user
       const createdUser = await User.create(newUserData);
 
-      const response = await request(server).get(`/api/v1/users/${createdUser._id}`);
+      const response = await request(server)
+        .get(`/api/v1/users/${createdUser._id}`)
+        .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
       expect(response.body.user).toBeDefined();
@@ -96,7 +126,9 @@ describe('user', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      const response = await request(server).get('/api/v1/users/64f0d1196cbe0251ae16b092');
+      const response = await request(server)
+        .get('/api/v1/users/64f0d1196cbe0251ae16b092')
+        .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBeDefined();
@@ -108,9 +140,12 @@ describe('user', () => {
       // Create a user
       const createdUser = await User.create(newUserData);
 
-      const response = await request(server).put(`/api/v1/users/${createdUser._id}`).send({
-        name: 'Updated Name',
-      });
+      const response = await request(server)
+        .put(`/api/v1/users/${createdUser._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'Updated Name',
+        });
 
       expect(response.status).toBe(200);
       expect(response.body.user).toBeDefined();
@@ -119,9 +154,12 @@ describe('user', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      const response = await request(server).put('/api/v1/users/64f0d1196cbe0251ae16b092').send({
-        name: 'Updated Name',
-      });
+      const response = await request(server)
+        .put('/api/v1/users/64f0d1196cbe0251ae16b092')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'Updated Name',
+        });
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBe('No user found');
@@ -133,14 +171,18 @@ describe('user', () => {
       // Create a user
       const createdUser = await User.create(newUserData);
 
-      const response = await request(server).delete(`/api/v1/users/${createdUser._id}`);
+      const response = await request(server)
+        .delete(`/api/v1/users/${createdUser._id}`)
+        .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(204);
       expect(response.text).toBe('');
     });
 
     it('should return 404 if user not found', async () => {
-      const response = await request(server).delete('/api/v1/users/64e3cb9978ed3b58c9b3a653');
+      const response = await request(server)
+        .delete('/api/v1/users/64e3cb9978ed3b58c9b3a653')
+        .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBeDefined();
