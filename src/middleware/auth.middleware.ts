@@ -48,4 +48,16 @@ const authenticateUser = asyncHandler(
     next();
   }
 );
-export { authenticateUser };
+
+// Authorization (user permissions)
+const allowedTo =
+  (...roles: string[]) =>
+  (req: AuthRequest, _res: Response, next: NextFunction) => {
+    if (!roles.includes(req.user!.role)) {
+      return next(new HttpException(401, 'You are not authorized to access this route'));
+    }
+
+    next();
+  };
+
+export { authenticateUser, allowedTo };

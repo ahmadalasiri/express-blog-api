@@ -2,13 +2,14 @@ import { Router } from 'express';
 
 import UserController from '../controller/user.controller';
 import { Routes } from '../interfaces/routes.interface';
+import { allowedTo, authenticateUser } from '../middleware/auth.middleware';
+import { imageUpload } from '../middleware/uploadImages.middleware';
 import {
   createUserValidator,
   deleteUserValidator,
   getUserValidator,
   updateUserValidator,
 } from '../middleware/validation';
-import { verifyToken } from '../middleware/auth.middleware';
 
 class UserRoute implements Routes {
   public path = '/users';
@@ -20,7 +21,10 @@ class UserRoute implements Routes {
   }
 
   private insitializeRoutes() {
-    this.router.use(verifyToken)
+    this.router.use(`${this.path}`, authenticateUser, allowedTo('admin'));
+    this.router
+      .route(`${this.path}/profile-picture-upload`)
+      .put(imageUpload.single('profilePicture'));
     this.router
       .route(`${this.path}`)
       .get(this.userController.getUsers)

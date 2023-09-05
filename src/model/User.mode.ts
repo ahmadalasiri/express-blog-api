@@ -6,7 +6,7 @@ let userSchema: Schema<IUser & Document> = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'name required'],
+      required: [true, 'Name is required'],
       trim: true,
     },
     username: {

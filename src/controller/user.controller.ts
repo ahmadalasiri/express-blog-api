@@ -39,20 +39,6 @@ class UserController {
   });
 
   public updateUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    if (req.body.username || req.body.email) {
-      let existing = await User.findOne({ $or: [req.body.email, req.body.username] });
-      if (existing) {
-        if (existing.email === req.body.email) {
-          return next(
-            new HttpException(
-              409,
-              `E-Mail address ${req.body.email} is already exists, please pick a different one.`
-            )
-          );
-        } else return next(new HttpException(409, `Username ${req.body.username} already in use`));
-      }
-    }
-
     let user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!user) return next(new HttpException(404, 'No user found'));
     res.status(200).json({ user });
@@ -63,6 +49,24 @@ class UserController {
     if (!user) return next(new HttpException(404, 'No user found'));
     res.status(204).send();
   });
+
+  // private async validateUniqueEmailAndUsername(
+  //   email: string | undefined,
+  //   username: string | undefined
+  // ) {
+  //   let existing = await User.findOne({ $or: [{ email }, { username }] });
+
+  //   if (existing) {
+  //     if (existing.email === email) {
+  //       new HttpException(
+  //         409,
+  //         `E-Mail address ${email} already exists, please pick a different one.`
+  //       );
+  //     } else {
+  //       new HttpException(409, `Username ${username} already in use`);
+  //     }
+  //   }
+  // }
 }
 
 export default UserController;
