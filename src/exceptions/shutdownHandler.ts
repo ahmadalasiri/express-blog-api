@@ -36,7 +36,7 @@ process.on('unhandledRejection', (err: Error) => {
 });
 // uncaught exception  - synchronous errors
 process.on('uncaughtException', (err: Error) => {
-  logger.error(err.name, { message: err.message })
+  logger.error(err.name, { message: err.message });
   logger.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   process.exit(1);
 });

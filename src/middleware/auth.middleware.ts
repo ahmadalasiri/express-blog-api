@@ -1,4 +1,5 @@
 import { NextFunction, Response } from 'express';
+import { Request } from 'express';
 import asyncHandler from 'express-async-handler';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
@@ -7,7 +8,7 @@ import HttpException from '../exceptions/HttpException';
 import { AuthRequest } from '../interfaces/auth.interface';
 import User from '../model/User.mode';
 
-const checkTokenExists = (req: AuthRequest, next: NextFunction) => {
+const checkTokenExists = (req: Request, next: NextFunction) => {
   if (!req.headers.authorization?.startsWith('Bearer')) {
     return next(
       new HttpException(401, `You are not authorized, you must login to get access this route`)
@@ -25,10 +26,6 @@ const checkTokenExists = (req: AuthRequest, next: NextFunction) => {
   return token;
 };
 
-const verifyTokenIntegrity = (token: string) => {
-  return jwt.verify(token, env.JWT_SECRET) as JwtPayload;
-};
-
 const checkUserExists = async (userId: string, next: NextFunction) => {
   const user = await User.findById(userId);
 
@@ -42,7 +39,7 @@ const checkUserExists = async (userId: string, next: NextFunction) => {
 const authenticateUser = asyncHandler(
   async (req: AuthRequest, _res: Response, next: NextFunction) => {
     const token = checkTokenExists(req, next);
-    const decoded = verifyTokenIntegrity(token!);
+    const decoded = jwt.verify(token!, env.JWT_SECRET) as JwtPayload;
     const user = await checkUserExists(decoded.userId, next);
     req.user = user!;
     next();
@@ -54,7 +51,7 @@ const allowedTo =
   (...roles: string[]) =>
   (req: AuthRequest, _res: Response, next: NextFunction) => {
     if (!roles.includes(req.user!.role)) {
-      return next(new HttpException(401, 'You are not authorized to access this route'));
+      return next(new HttpException(403, `You are not allowed to perform this action`));
     }
 
     next();

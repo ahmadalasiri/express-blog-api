@@ -33,9 +33,10 @@ let userSchema: Schema<IUser & Document> = new Schema(
     },
     profilePicture: {
       type: Object,
-      default:
-        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png',
-      publicId: null,
+      default: {
+        url: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
+        publicId: null,
+      },
     },
     bio: {
       type: String,

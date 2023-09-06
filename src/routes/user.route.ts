@@ -23,8 +23,8 @@ class UserRoute implements Routes {
   private insitializeRoutes() {
     this.router.use(`${this.path}`, authenticateUser, allowedTo('admin'));
     this.router
-      .route(`${this.path}/profile-picture-upload`)
-      .put(imageUpload.single('profilePicture'));
+      .route(`${this.path}/profile-picture-upload/:id`)
+      .put(imageUpload.single('profilePicture'), this.userController.updateProfileImage);
     this.router
       .route(`${this.path}`)
       .get(this.userController.getUsers)

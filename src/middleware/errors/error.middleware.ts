@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import HttpException from '../../exceptions/HttpException';
+import logger from '../../log';
 
 const handelCastErrorDB = (err: HttpException) => {
   const message = `Invalid ${err.path}: ${err.value} `;
@@ -19,9 +20,10 @@ const handelValidationErrorDB = (err: HttpException) => {
   return new HttpException(400, message);
 };
 
-const handleJwtInvalidSignture = () => new HttpException(401, "Invalid token, please login again..");
+const handleJwtInvalidSignture = () =>
+  new HttpException(401, 'Invalid token, please login again..');
 
-const handleJwtExpired = () => new HttpException(401, "Expired token, please login again..");
+const handleJwtExpired = () => new HttpException(401, 'Expired token, please login again..');
 
 const sendForDev = (err: HttpException, res: Response) => {
   res.status(err.statusCode).json({
@@ -42,7 +44,7 @@ const sendForProd = (err: HttpException, res: Response) => {
     // Programming or other unknown error: don't leak error details
   } else {
     // 1) Log error
-    console.error('ERROR 💥', err);
+    logger.error('ERROR 💥', err);
 
     // 2) Send generic message
     res.status(500).json({ status: 'error', message: 'Something went wrong!' });
@@ -62,12 +64,6 @@ export const errorMiddleware = (
   if (process.env.NODE_ENV === 'development') {
     sendForDev(err, res);
   } else if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'testing') {
-    for (const prop in err) {
-      Object.defineProperty(err, prop, {
-        enumerable: true,
-      });
-    }
-
     if (err.name === 'CastError') {
       err = handelCastErrorDB(err);
     }
@@ -78,8 +74,8 @@ export const errorMiddleware = (
       err = handelValidationErrorDB(err);
     }
 
-    if (err.name === "JsonWebTokenError") err = handleJwtInvalidSignture();
-    if (err.name === "TokenEpiredError") err = handleJwtExpired();
+    if (err.name === 'JsonWebTokenError') err = handleJwtInvalidSignture();
+    if (err.name === 'TokenEpiredError') err = handleJwtExpired();
 
     sendForProd(err, res);
   }

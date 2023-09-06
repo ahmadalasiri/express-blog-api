@@ -81,6 +81,38 @@ describe('user', () => {
       expect(response.status).toBe(409);
       expect(response.body.message).toMatch('Username already in use');
     });
+
+    it('should return 400 if password and confirmPassword do not match', async () => {
+      const response = await request(server)
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'John Doe',
+          email: 'newEmail@gmail.com',
+          username: 'JohnDoe',
+          password: 'password123',
+          confirmPassword: 'password',
+        });
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 401 You are not authorized, if no token is provided', async () => {
+      const response = await request(server).post('/api/v1/users').send(newUserData);
+      expect(response.status).toBe(401);
+      expect(response.body.message).toMatch('You are not authorized');
+    });
+
+    it('should return 403 if user is not an admin', async () => {
+      const user = await User.create(newUserData);
+      token = createToken(user._id);
+
+      const response = await request(server)
+        .post('/api/v1/users')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newUserData);
+
+      expect(response.status).toBe(403);
+    });
   });
 
   describe('GET /api/v1/users', () => {

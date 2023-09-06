@@ -14,6 +14,9 @@ const validateEnv = cleanEnv(process.env, {
   DB_URI: str(),
   JWT_SECRET: str(),
   JWT_EXPIRATION: str(),
+  CLOUDINARY_API_SECRET: str(),
+  CLOUDINARY_API_KEY: str(),
+  CLOUDINARY_CLOUD_NAME: str(),
 });
 
 export default validateEnv;

@@ -1,10 +1,13 @@
 export interface IUser {
-  _id?: string
+  _id?: string;
   name: string;
   username: string;
   email: string;
   password: string;
-  profilePicture: Object;
+  profilePicture: {
+    url: string;
+    publicId: string | null;
+  };
   bio: string;
   role: string;
   active: boolean;
