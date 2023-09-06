@@ -3,6 +3,7 @@ import request from 'supertest';
 
 import { server } from '../..';
 import User from '../../model/User.mode';
+import { cloudinaryDeleteImage } from '../../utils/cloudinary';
 import { createToken } from '../../utils/createToken';
 
 let token: string;
@@ -218,6 +219,22 @@ describe('user', () => {
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBeDefined();
+    });
+  });
+
+  describe('PUT /api/v1/users/profile-picture-upload/:id', () => {
+    it('should update a user profile picture', async () => {
+      // Create a user
+      const user = await User.create(newUserData);
+
+      const response = await request(server)
+        .put(`/api/v1/users/profile-picture-upload/${user._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .attach('profilePicture', 'src/__test__/integration/testFiles/testImage.jpg');
+      await cloudinaryDeleteImage(response.body.user.profilePicture.publicId);
+      expect(response.status).toBe(200);
+      expect(response.body.user.profilePicture.url).toMatch('https://res.cloudinary.com');
+      expect(response.body.user.profilePicture.publicId).toBeDefined();
     });
   });
 });
