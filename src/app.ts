@@ -1,15 +1,16 @@
 import express from 'express';
 import morgan from 'morgan';
+import 'reflect-metadata';
 import swaggerUi from 'swagger-ui-express';
 
-import swaggerDocument from '../swagger.json';
-import dbConnection from './DB/dbConnetion';
+import dbConnection from './DB';
+import env from './config/validateEnv';
+import swaggerDocument from './docs/swagger.json';
 import { notFound } from './exceptions/notFound';
 import './exceptions/shutdownHandler';
 import { Routes } from './interfaces/routes.interface';
-import logger from './log';
 import { errorMiddleware } from './middleware/errors';
-import env from './utils/validateEnv';
+import logger from './utils/log';
 
 class App {
   public app: express.Application;

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import HttpException from '../../exceptions/HttpException';
-import logger from '../../log';
+import logger from '../../utils/log';
 
 const handelCastErrorDB = (err: HttpException) => {
   const message = `Invalid ${err.path}: ${err.value} `;

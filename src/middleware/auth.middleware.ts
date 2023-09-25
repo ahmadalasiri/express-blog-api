@@ -3,10 +3,10 @@ import { Request } from 'express';
 import asyncHandler from 'express-async-handler';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import env from '../../src/utils/validateEnv';
+import User from '../DB/models/user.model';
+import env from '../config/validateEnv';
 import HttpException from '../exceptions/HttpException';
 import { AuthRequest } from '../interfaces/auth.interface';
-import User from '../model/User.mode';
 
 const checkTokenExists = (req: Request, next: NextFunction) => {
   if (!req.headers.authorization?.startsWith('Bearer')) {
@@ -39,7 +39,7 @@ const checkUserExists = async (userId: string, next: NextFunction) => {
 const authenticateUser = asyncHandler(
   async (req: AuthRequest, _res: Response, next: NextFunction) => {
     const token = checkTokenExists(req, next);
-    const decoded = jwt.verify(token!, env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token!, env.JWT_SECRET_KEY) as JwtPayload;
     const user = await checkUserExists(decoded.userId, next);
     req.user = user!;
     next();

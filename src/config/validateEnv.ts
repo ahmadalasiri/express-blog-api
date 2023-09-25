@@ -12,7 +12,7 @@ const validateEnv = cleanEnv(process.env, {
   NODE_ENV: str(),
   BASE_URL: url(),
   DB_URI: str(),
-  JWT_SECRET: str(),
+  JWT_SECRET_KEY: str(),
   JWT_EXPIRATION: str(),
   CLOUDINARY_API_SECRET: str(),
   CLOUDINARY_API_KEY: str(),

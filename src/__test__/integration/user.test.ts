@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 
-import { server } from '../..';
-import User from '../../model/User.mode';
+import { server } from '../../';
+import User from '../../DB/models/user.model';
 import { cloudinaryDeleteImage } from '../../utils/cloudinary';
 import { createToken } from '../../utils/createToken';
 

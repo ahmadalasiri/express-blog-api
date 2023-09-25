@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import UserController from '../controller/user.controller';
+import UserController from '../controllers/user.controller';
 import { Routes } from '../interfaces/routes.interface';
 import { allowedTo, authenticateUser } from '../middleware/auth.middleware';
 import { imageUpload } from '../middleware/uploadImages.middleware';

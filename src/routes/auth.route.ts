@@ -1,15 +1,14 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 
-import { AuthController } from '../controller';
+import { AuthController } from '../controllers';
 import { Routes } from '../interfaces/routes.interface';
 import { loginValidator, signupValidator } from '../middleware/validation';
-
-// import { loginValidator } from './../middleware/validation/auth.validator';
 
 export class AuthRoute implements Routes {
   public path = '/auth';
   public router = Router();
-  public authController = new AuthController();
+  public authController = container.resolve(AuthController);
 
   constructor() {
     this.initializerRoutes();

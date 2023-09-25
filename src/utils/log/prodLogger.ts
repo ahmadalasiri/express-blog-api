@@ -1,7 +1,7 @@
 import winston, { format } from 'winston';
 import 'winston-mongodb';
 
-import env from '../utils/validateEnv';
+import env from '../../config/validateEnv';
 
 const logFormat = format.printf(info => {
   let message = `${info.timestamp} | ${info.level} | ${info.message}`;
@@ -14,7 +14,7 @@ const prodLogger = winston.createLogger({
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm' }), logFormat),
   defaultMeta: { service: 'user-service' },
   transports: [
-    // new winston.transports.Console(),
+    new winston.transports.Console(),
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
     new winston.transports.MongoDB({
       level: 'info',

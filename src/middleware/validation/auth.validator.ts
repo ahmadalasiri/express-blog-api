@@ -39,7 +39,14 @@ export const signupValidator = [
         return true;
       }
     }),
-
+  check('role')
+    .optional()
+    .custom(value => {
+      if (value || value === '') {
+        throw new Error('Role is not allowed');
+      }
+    }),
+  check('active').isEmpty().withMessage('Active is not allowed'),
   validatorMiddleware,
 ];
 

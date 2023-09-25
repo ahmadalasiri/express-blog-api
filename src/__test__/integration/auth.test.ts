@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 
-import { server } from '../..';
-import User from '../../model/User.mode';
+import { server } from '../../';
+import User from '../../DB/models/user.model';
 
 afterAll(async () => {
   await mongoose.connection.dropDatabase();

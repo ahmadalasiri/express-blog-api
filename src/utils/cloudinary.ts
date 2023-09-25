@@ -2,7 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 
 import HttpException from '../exceptions/HttpException';
 // import logger from '../log';
-import env from './validateEnv';
+import env from '../config/validateEnv';
 
 cloudinary.config({
   cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -10,7 +10,6 @@ cloudinary.config({
   api_secret: env.CLOUDINARY_API_SECRET,
 });
 
-// const cloudinaryUploadImage = async (fileToUpload: string) => {
 //   try {
 //     const result = await cloudinary.uploader.upload(fileToUpload, {
 //       resource_type: 'auto',

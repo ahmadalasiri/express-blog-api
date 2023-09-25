@@ -24,7 +24,6 @@ const multerFilter = (_req: Request, file: Express.Multer.File, cd: FileFilterCa
   }
 };
 
-// TODO: add file size limit
 // TODO: use memory storage instead of disk storage
 export const imageUpload = multer({
   storage: multerStorage,
