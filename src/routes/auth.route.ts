@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
 
-import { AuthController } from '../controllers';
+import { AuthController } from '../controllers/auth.controller';
 import { Routes } from '../interfaces/routes.interface';
 import { loginValidator, signupValidator } from '../middleware/validation';
 
