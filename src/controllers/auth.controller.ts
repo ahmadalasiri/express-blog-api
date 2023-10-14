@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
 import { autoInjectable } from 'tsyringe'
+import asyncHandler from 'express-async-handler';
 
 import { AuthServie } from "../services/auth.service";
 

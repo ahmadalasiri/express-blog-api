@@ -7,7 +7,7 @@ import { cloudinaryDeleteImage, cloudinaryUploadImage } from '../utils/cloudinar
 import fs from 'fs';
 
 @autoInjectable()
-class AdminService {
+class UserService {
 
   constructor(private userDao: UserDao) { }
 
@@ -60,7 +60,7 @@ class AdminService {
     if (!user) throw new HttpException(404, 'No user found');
     // delete the old image from cloudinary if exists
     if (user.profilePicture.publicId) await cloudinaryDeleteImage(user.profilePicture.publicId);
-    // 6. Change the profilePhoto field in the DB
+    // Change the profilePhoto field in the DB
     user = await this.userDao.update(
       userId,
       { profilePicture: { url: result.secure_url, publicId: result.public_id } } as IUser
@@ -72,7 +72,7 @@ class AdminService {
     return user
   }
 }
-export { AdminService }
+export { UserService }
 
 
 

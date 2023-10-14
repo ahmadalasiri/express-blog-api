@@ -1,13 +1,14 @@
 import {   injectable } from 'tsyringe';
 import UserDao from '../DB/dao/user.dao';
 import bcrypt from 'bcrypt';
-
 import HttpException from '../exceptions/HttpException';
+
 import { IUser } from '../interfaces/User.interface';
 import { createToken } from '../utils/createToken';
  
 @injectable()
 export class AuthServie {
+  
   constructor(private readonly userDao: UserDao) {}
 
   /**
