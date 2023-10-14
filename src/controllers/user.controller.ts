@@ -4,7 +4,7 @@ import { autoInjectable } from 'tsyringe';
 
 import HttpException from '../exceptions/HttpException';
 import { AuthRequest } from '../interfaces/auth.interface';
-import { UserService } from '../services/users.service';
+import { UserService } from '../services/user.service';
 
 @autoInjectable()
 class UserController {

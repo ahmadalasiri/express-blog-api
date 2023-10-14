@@ -3,7 +3,7 @@ import { injectable } from 'tsyringe';
 
 import UserDao from '../DB/dao/user.dao';
 import HttpException from '../exceptions/HttpException';
-import { IUser } from '../interfaces/user.interface';
+import { IUser } from '../interfaces/User.interface';
 import { createToken } from '../utils/createToken';
 
 @injectable()
