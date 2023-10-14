@@ -9,3 +9,9 @@ export interface IPost {
   claps: ObjectId[];
   comments: IComment[];
 }
+
+export interface IPostUpdate {
+  userId: string;
+  title?: string;
+  content?: string;
+}

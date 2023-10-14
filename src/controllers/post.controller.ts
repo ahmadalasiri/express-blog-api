@@ -26,14 +26,15 @@ class PostController {
     res.status(201).json({ data: post });
   });
 
-  public updatePost = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  public updatePost = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
+    req.body.userId = req.user?._id!;
     let post = await this.postService.updatePost(req.params.id, req.body);
     if (!post) return next(new HttpException(404, 'No post found'));
     res.status(200).json({ data: post });
   });
 
-  public deletePost = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    let post = await this.postService.deletePost(req.params.id);
+  public deletePost = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
+    let post = await this.postService.deletePost(req.params.id, req.user?._id!);
     if (!post) return next(new HttpException(404, 'No post found'));
     res.sendStatus(204);
   });

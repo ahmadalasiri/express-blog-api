@@ -14,3 +14,8 @@ export interface IUser {
   followers: string[];
   following: string[];
 }
+
+export interface IUserUpdate {
+  firstName?: string;
+  lastName?: string;
+}

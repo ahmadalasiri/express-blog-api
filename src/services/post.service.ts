@@ -1,7 +1,8 @@
 import { autoInjectable } from 'tsyringe';
 
 import { PostDao } from '../DB/dao/post.dao';
-import { IPost } from '../interfaces/post.interface';
+import HttpException from '../exceptions/HttpException';
+import { IPost, IPostUpdate } from '../interfaces/post.interface';
 
 @autoInjectable()
 class PostService {
@@ -20,11 +21,17 @@ class PostService {
     return await this.postDao.createPost(post);
   };
 
-  public updatePost = async (id: string, post: IPost): Promise<IPost | null> => {
+  public updatePost = async (id: string, post: IPostUpdate): Promise<IPost | null> => {
+    let oldPost = await this.postDao.getPost(id);
+    if (!oldPost) return null;
+    if (oldPost?.author.toString() !== post.userId.toString()) throw new HttpException(403, 'You are not authorized to update this post');
     return await this.postDao.updatePost(id, post);
   };
 
-  public deletePost = async (id: string): Promise<IPost | null> => {
+  public deletePost = async (id: string, userId: string): Promise<IPost | null> => {
+    let oldPost = await this.postDao.getPost(id);
+    if (!oldPost) return null;
+    if (oldPost?.author !== (userId as any)) throw new HttpException(403, 'You are not authorized to update this post');
     return await this.postDao.deletePost(id);
   };
 }

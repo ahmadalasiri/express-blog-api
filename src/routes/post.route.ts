@@ -15,14 +15,14 @@ class PostRoute {
   private initializeRoutes() {
     // public routes
     this.router.get(`${this.path}`, this.postController.listPosts);
-    this.router.route(`${this.path}/:id}`).get(getPostValidator, this.postController.getPost);
+    this.router.route(`${this.path}/:id`).get(getPostValidator, this.postController.getPost);
 
     // protected routes
     this.router.use(`${this.path}`, authenticateUser);
     this.router.post(`${this.path}`, createPostValidator, this.postController.createPost);
     this.router
-      .route(`${this.path}/:id}`)
-      .put(updatePostValidator, this.postController.updatePost)
+      .route(`${this.path}/:id`)
+      .patch(updatePostValidator, this.postController.updatePost)
       .delete(deletePostValidator, this.postController.deletePost);
 
     // .put(this.postController.updatePost).delete(this.postController.deletePost);

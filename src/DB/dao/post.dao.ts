@@ -1,4 +1,4 @@
-import { IPost } from '../../interfaces/post.interface';
+import { IPost, IPostUpdate } from '../../interfaces/post.interface';
 import PostModel from '../models/post.model';
 
 class PostDao {
@@ -13,7 +13,7 @@ class PostDao {
     return await PostModel.create(post);
   }
 
-  async updatePost(id: string, post: IPost): Promise<IPost | null> {
+  async updatePost(id: string, post: IPostUpdate): Promise<IPost | null> {
     return await PostModel.findByIdAndUpdate(id, post, { new: true }).lean();
   }
 
