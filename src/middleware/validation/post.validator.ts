@@ -7,3 +7,17 @@ export const getPostValidator = [
 
   validatorMiddleware,
 ];
+
+export const createPostValidator = [
+  check('title').notEmpty().withMessage('Post title is required').isString(),
+  check('content').notEmpty().withMessage('Post content is required'),
+
+  validatorMiddleware,
+];
+
+// export const getPostsValidator = [
+//   check('page').optional().isInt().withMessage('Page must be a number'),
+//   check('limit').optional().isInt().withMessage('Limit must be a number'),
+
+//   validatorMiddleware,
+// ];
