@@ -12,6 +12,14 @@ class PostDao {
   async createPost(post: IPost): Promise<IPost | null> {
     return await PostModel.create(post);
   }
+
+  async updatePost(id: string, post: IPost): Promise<IPost | null> {
+    return await PostModel.findByIdAndUpdate(id, post, { new: true }).lean();
+  }
+
+  async deletePost(id: string): Promise<IPost | null> {
+    return await PostModel.findByIdAndDelete(id).lean();
+  }
 }
 
 export { PostDao };
