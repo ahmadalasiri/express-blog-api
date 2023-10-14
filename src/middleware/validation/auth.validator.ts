@@ -3,11 +3,7 @@ import { check } from 'express-validator';
 import validatorMiddleware from '../errors/validation.middleware';
 
 export const signupValidator = [
-  check('name')
-    .notEmpty()
-    .withMessage('User name is required')
-    .isString()
-    .withMessage('Name must be a string'),
+  check('name').notEmpty().withMessage('User name is required').isString().withMessage('Name must be a string'),
 
   check('username')
     .notEmpty()
@@ -23,11 +19,7 @@ export const signupValidator = [
     .isLength({ min: 5, max: 100 })
     .withMessage('Email must be between 5 and 100 characters'),
 
-  check('password')
-    .notEmpty()
-    .withMessage('User password is required')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters'),
+  check('password').notEmpty().withMessage('User password is required').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
 
   check('confirmPassword')
     .notEmpty()
@@ -58,7 +50,6 @@ export const loginValidator = [
       // Check if input is a valid email or a username
       const isValidEmail = /\S+@\S+\.\S+/.test(value);
       const isValidUsername = /^[a-zA-Z0-9_]+$/.test(value);
-
       if (!isValidEmail && !isValidUsername) {
         throw new Error('Input must be a valid email or username');
       }
@@ -66,11 +57,7 @@ export const loginValidator = [
       return true;
     }),
 
-  check('password')
-    .notEmpty()
-    .withMessage('User password is required')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters'),
+  check('password').notEmpty().withMessage('User password is required').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
 
   validatorMiddleware,
 ];

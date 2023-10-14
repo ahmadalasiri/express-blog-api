@@ -11,4 +11,6 @@ export interface IUser {
   bio: string;
   role: string;
   active: boolean;
+  followers: string[];
+  following: string[];
 }

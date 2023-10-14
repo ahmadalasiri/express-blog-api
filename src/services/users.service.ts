@@ -1,16 +1,21 @@
-import { autoInjectable } from 'tsyringe';
-import UserDao from '../DB/dao/user.dao';
 import bcrypt from 'bcrypt';
-import { IUser } from '../interfaces/User.interface';
-import HttpException from '../exceptions/HttpException';
-import { cloudinaryDeleteImage, cloudinaryUploadImage } from '../utils/cloudinary';
 import fs from 'fs';
+import { autoInjectable } from 'tsyringe';
+
+import UserDao from '../DB/dao/user.dao';
+import HttpException from '../exceptions/HttpException';
+import { IUser } from '../interfaces/User.interface';
+import { cloudinaryDeleteImage, cloudinaryUploadImage } from '../utils/cloudinary';
 
 @autoInjectable()
 class UserService {
+  constructor(private userDao: UserDao) {}
 
-  constructor(private userDao: UserDao) { }
-
+  /**********************************
+   *
+   *    Admin
+   *
+   **********************************/
   async getUsers() {
     return await this.userDao.getUsers();
   }
@@ -35,7 +40,7 @@ class UserService {
 
     let newUser = await this.userDao.create(user);
 
-    return newUser
+    return newUser;
   }
 
   async updateUser(userId: string, user: IUser) {
@@ -52,7 +57,6 @@ class UserService {
   }
 
   async updateProfileImage(userId: string, file: Express.Multer.File) {
-
     const filePath = `${file.path}`;
     const result = await cloudinaryUploadImage(filePath);
     // update the user with the image url and public id
@@ -61,18 +65,11 @@ class UserService {
     // delete the old image from cloudinary if exists
     if (user.profilePicture.publicId) await cloudinaryDeleteImage(user.profilePicture.publicId);
     // Change the profilePhoto field in the DB
-    user = await this.userDao.update(
-      userId,
-      { profilePicture: { url: result.secure_url, publicId: result.public_id } } as IUser
-
-    );
+    user = await this.userDao.update(userId, { profilePicture: { url: result.secure_url, publicId: result.public_id } } as IUser);
 
     // remove the file from the server
     fs.unlinkSync(filePath);
-    return user
+    return user;
   }
 }
-export { UserService }
-
-
-
+export { UserService };
