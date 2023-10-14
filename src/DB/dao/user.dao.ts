@@ -1,4 +1,4 @@
-import { IUser } from '../../interfaces/User.interface';
+import { IUser } from '../../interfaces/user.interface';
 import UserModel from '../models/user.model';
 
 class UserDao {
