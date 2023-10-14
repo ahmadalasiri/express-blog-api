@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export interface IUser {
   _id?: string;
   name: string;
@@ -11,6 +13,6 @@ export interface IUser {
   bio: string;
   role: string;
   active: boolean;
-  followers: string[];
-  following: string[];
+  followers: Types.ObjectId[];
+  following: Types.ObjectId[];
 }
