@@ -14,12 +14,20 @@ class PostService {
     let excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach(field => delete query[field]);
 
+    // 2- Advanced Filteration (gt, gte, lt, lte, in) (mongodb operators)
+    let queryStr = JSON.stringify(query);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+    query = JSON.parse(queryStr);
+
     // 2- Pagination
     let page = parseInt(reqQuery.page as string) || 1;
     let limit = parseInt(reqQuery.limit as string) || 10;
     let skip = (page - 1) * limit;
 
-    return await this.postDao.listPosts(query, skip, limit);
+    // 3- Sorting
+    let sort = reqQuery.sort || '-createdAt'; // default sort by createdAt desc
+
+    return await this.postDao.listPosts(query, skip, limit, sort);
   };
 
   public getPost = async (id: string): Promise<IPost | null> => {

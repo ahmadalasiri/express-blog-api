@@ -11,8 +11,26 @@ import { cloudinaryDeleteImage, cloudinaryUploadImage } from '../utils/cloudinar
 class UserService {
   constructor(private userDao: UserDao) {}
 
-  async getUsers() {
-    return await this.userDao.getUsers();
+  async getUsers(reqQuery: any) {
+    // 1- Filteration
+    let query = { ...reqQuery };
+    let excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach(field => delete query[field]);
+
+    // 2- Advanced Filteration (gt, gte, lt, lte, in) (mongodb operators)
+    let queryStr = JSON.stringify(query);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+    query = JSON.parse(queryStr);
+
+    // 2- Pagination
+    let page = parseInt(reqQuery.page as string) || 1;
+    let limit = parseInt(reqQuery.limit as string) || 10;
+    let skip = (page - 1) * limit;
+
+    // 3- Sorting
+    let sort = reqQuery.sort || '-createdAt'; // default sort by createdAt desc
+
+    return await this.userDao.listUsers(query, skip, limit, sort);
   }
 
   async getUser(userId: string) {

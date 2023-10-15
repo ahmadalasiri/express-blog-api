@@ -5,9 +5,8 @@ class PostDao {
   async getPost(id: string): Promise<IPost | null> {
     return await PostModel.findById(id).lean();
   }
-  async listPosts(query: any, skip: number, limit: number): Promise<IPost[] | null> {
-    console.log(query, skip, limit);
-    return await PostModel.find(query).skip(skip).limit(limit).lean();
+  async listPosts(query: any, skip: number = 0, limit: number = 100, sort: any = {}): Promise<IPost[] | null> {
+    return await PostModel.find(query).skip(skip).limit(limit).sort(sort).lean();
   }
 
   async createPost(post: IPost): Promise<IPost | null> {

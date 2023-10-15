@@ -38,8 +38,8 @@ class UserController {
    *    Admin
    *
    **********************************/
-  public getUsers = asyncHandler(async (_req: Request, res: Response) => {
-    let users = await this.userService.getUsers();
+  public getUsers = asyncHandler(async (req: Request, res: Response) => {
+    let users = await this.userService.getUsers(req.query);
     res.status(200).json({ data: users });
   });
   public getUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
