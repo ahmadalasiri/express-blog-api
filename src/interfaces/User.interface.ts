@@ -15,6 +15,7 @@ export interface IUser {
   following: string[];
 }
 
+export interface IUserDocument extends IUser, Document {}
 export interface IUserUpdate {
   firstName?: string;
   lastName?: string;

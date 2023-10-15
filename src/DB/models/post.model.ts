@@ -1,12 +1,12 @@
-import { Document, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-import { IPost } from '../../interfaces/post.interface';
+import { IPostDocument } from '../../interfaces/post.interface';
 
-let PostSchema: Schema<IPost & Document> = new Schema(
+let PostSchema: Schema<IPostDocument> = new Schema(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
-    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     claps: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     comments: [
       {
@@ -17,6 +17,6 @@ let PostSchema: Schema<IPost & Document> = new Schema(
   { timestamps: true }
 );
 
-let PostModel = model<IPost & Document>('Post', PostSchema);
+let PostModel = model<IPostDocument>('Post', PostSchema);
 
 export default PostModel;

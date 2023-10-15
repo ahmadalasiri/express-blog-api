@@ -10,8 +10,8 @@ import { PostService } from '../services/post.service';
 class PostController {
   constructor(private readonly postService: PostService) {}
 
-  public listPosts = asyncHandler(async (_req: Request, res: Response, _next: NextFunction) => {
-    let posts = await this.postService.getPosts();
+  public listPosts = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    let posts = await this.postService.getPosts(req.query);
     res.status(200).json({ results: posts?.length, data: posts });
   });
 

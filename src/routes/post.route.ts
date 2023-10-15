@@ -8,7 +8,8 @@ import { createPostValidator, deletePostValidator, getPostValidator, updatePostV
 @autoInjectable()
 class PostRoute {
   public path = '/posts';
-  public router = Router();
+  public router = Router({ mergeParams: true });
+
   constructor(private readonly postController: PostController) {
     this.initializeRoutes();
   }

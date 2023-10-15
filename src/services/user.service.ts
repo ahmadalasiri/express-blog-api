@@ -11,11 +11,6 @@ import { cloudinaryDeleteImage, cloudinaryUploadImage } from '../utils/cloudinar
 class UserService {
   constructor(private userDao: UserDao) {}
 
-  /**********************************
-   *
-   *    Admin
-   *
-   **********************************/
   async getUsers() {
     return await this.userDao.getUsers();
   }

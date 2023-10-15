@@ -10,7 +10,6 @@ import { UserService } from '../services/user.service';
 class UserController {
   constructor(private readonly userService: UserService) {}
   // logged in user
-
   public getLoggedUser = asyncHandler(async (req: AuthRequest, res: Response) => {
     res.status(200).json({ data: req.user });
   });

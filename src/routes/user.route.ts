@@ -18,14 +18,14 @@ class UserRoute implements Routes {
 
   private insitializeRoutes() {
     this.router.use(`${this.path}`, authenticateUser);
-    // Me
+    // Logged user
     this.router
       .route(`${this.path}/me`)
       .get(this.userController.getLoggedUser)
-      .put(updateLoggedUserValidator, this.userController.updateLoggedUser)
+      .patch(updateLoggedUserValidator, this.userController.updateLoggedUser)
       .delete(this.userController.deleteLoggedUser);
 
-    this.router.route(`${this.path}/profile-picture-upload`).put(imageUpload.single('profilePicture'), this.userController.updateProfileImage);
+    this.router.route(`${this.path}/profile-picture-upload`).patch(imageUpload.single('profilePicture'), this.userController.updateProfileImage);
 
     // Admin only
     this.router.use(`${this.path}`, allowedTo('admin'));
@@ -34,7 +34,7 @@ class UserRoute implements Routes {
     this.router
       .route(`${this.path}/:id`)
       .get(getUserValidator, this.userController.getUser)
-      .put(updateUserValidator, this.userController.updateUser)
+      .patch(updateUserValidator, this.userController.updateUser)
       .delete(deleteUserValidator, this.userController.deleteUser);
   }
 }

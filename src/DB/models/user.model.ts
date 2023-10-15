@@ -1,8 +1,8 @@
-import { Document, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-import { IUser } from '../../interfaces/user.interface';
+import { IUserDocument } from '../../interfaces/user.interface';
 
-let userSchema: Schema<IUser & Document> = new Schema(
+let userSchema: Schema<IUserDocument> = new Schema(
   {
     name: {
       type: String,
@@ -57,6 +57,6 @@ let userSchema: Schema<IUser & Document> = new Schema(
   { timestamps: true }
 );
 
-let User = model<IUser & Document>('User', userSchema);
+let User = model<IUserDocument>('User', userSchema);
 
 export default User;
