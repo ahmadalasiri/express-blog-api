@@ -11,7 +11,7 @@ class PostService {
   public getPosts = async (reqQuery: any): Promise<IPost[] | null> => {
     // 1- Filteration
     let query = { ...reqQuery };
-    let excludedFields = ['page', 'sort', 'limit', 'fields'];
+    let excludedFields = ['page', 'sort', 'limit', 'fields', 'keyword'];
     excludedFields.forEach(field => delete query[field]);
 
     // 2- Advanced Filteration (gt, gte, lt, lte, in) (mongodb operators)
@@ -25,9 +25,17 @@ class PostService {
     let skip = (page - 1) * limit;
 
     // 3- Sorting
-    let sort = reqQuery.sort || '-createdAt'; // default sort by createdAt desc
+    let sort = reqQuery.sort?.split(',').join(' ') || '-createdAt'; // default sort by createdAt desc
 
-    return await this.postDao.listPosts(query, skip, limit, sort);
+    // 4- Fields limiting (projecting & selecting)
+    let fields = reqQuery.fields?.split(',').join(' ') || '-__v'; // default exclude __v field
+
+    // 5- search by keyword
+    if (reqQuery.keyword) {
+      query = { ...query, $or: [{ title: { $regex: reqQuery.keyword, $options: 'i' } }, { content: { $regex: reqQuery.keyword, $options: 'i' } }] };
+    }
+
+    return await this.postDao.listPosts(query, skip, limit, sort, fields);
   };
 
   public getPost = async (id: string): Promise<IPost | null> => {

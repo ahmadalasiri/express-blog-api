@@ -28,9 +28,17 @@ class UserService {
     let skip = (page - 1) * limit;
 
     // 3- Sorting
-    let sort = reqQuery.sort || '-createdAt'; // default sort by createdAt desc
+    let sort = reqQuery.sort.split(',').join(' ') || '-createdAt'; // default sort by createdAt desc
 
-    return await this.userDao.listUsers(query, skip, limit, sort);
+    // 4- Fields limiting (projecting & selecting)
+    let fields = reqQuery.fields?.split(',').join(' ') || '-__v'; // default exclude __v field
+
+    // 5- search by keyword
+    // if (reqQuery.keyword) {
+    //   query = { ...query, bio: { $regex: reqQuery.keyword, $options: 'i' } };
+    // }
+
+    return await this.userDao.listUsers(query, skip, limit, sort, fields);
   }
 
   async getUser(userId: string) {

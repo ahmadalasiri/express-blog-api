@@ -14,8 +14,8 @@ class UserDao {
     return await UserModel.findById(userId).lean();
   }
 
-  async listUsers(query: any = {}, skip: number = 0, limit: number = 100, sort: any = {}): Promise<IUser[]> {
-    return await UserModel.find(query).skip(skip).limit(limit).sort(sort).lean();
+  async listUsers(query: any = {}, skip: number = 0, limit: number = 100, sort: any = {}, select: any = '-__v'): Promise<IUser[]> {
+    return await UserModel.find(query).skip(skip).limit(limit).sort(sort).select(select).lean();
   }
 
   async create(user: IUser): Promise<IUser> {
