@@ -3,39 +3,23 @@ import { autoInjectable } from 'tsyringe';
 import { PostDao } from '../DB/dao/post.dao';
 import HttpException from '../exceptions/HttpException';
 import { IPost, IPostUpdate } from '../interfaces/post.interface';
+import APIFeatures from '../utils/apifeatures';
 
 @autoInjectable()
 class PostService {
   constructor(private readonly postDao: PostDao) {}
 
   public getPosts = async (reqQuery: any): Promise<IPost[] | null> => {
-    // 1- Filteration
-    let query = { ...reqQuery };
-    let excludedFields = ['page', 'sort', 'limit', 'fields', 'keyword'];
-    excludedFields.forEach(field => delete query[field]);
-
-    // 2- Advanced Filteration (gt, gte, lt, lte, in) (mongodb operators)
-    let queryStr = JSON.stringify(query);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
-    query = JSON.parse(queryStr);
-
-    // 2- Pagination
-    let page = parseInt(reqQuery.page as string) || 1;
-    let limit = parseInt(reqQuery.limit as string) || 10;
-    let skip = (page - 1) * limit;
-
-    // 3- Sorting
-    let sort = reqQuery.sort?.split(',').join(' ') || '-createdAt'; // default sort by createdAt desc
-
-    // 4- Fields limiting (projecting & selecting)
-    let fields = reqQuery.fields?.split(',').join(' ') || '-__v'; // default exclude __v field
-
-    // 5- search by keyword
+    let apiFeatures = new APIFeatures(reqQuery);
+    let query = apiFeatures.filter();
+    let paginate = apiFeatures.paginate();
+    let sort = apiFeatures.sort();
+    let fields = apiFeatures.selectFields();
+    // search by keyword
     if (reqQuery.keyword) {
-      query = { ...query, $or: [{ title: { $regex: reqQuery.keyword, $options: 'i' } }, { content: { $regex: reqQuery.keyword, $options: 'i' } }] };
+      query = { ...query, $or: [{ content: { $regex: reqQuery.keyword, $options: 'i' } }, { title: { $regex: reqQuery.keyword, $options: 'i' } }] };
     }
-
-    return await this.postDao.listPosts(query, skip, limit, sort, fields);
+    return await this.postDao.listPosts(query, paginate, sort, fields);
   };
 
   public getPost = async (id: string): Promise<IPost | null> => {
