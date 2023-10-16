@@ -17,23 +17,25 @@ class UserRoute implements Routes {
   }
 
   private insitializeRoutes() {
-    this.router.use(`${this.path}`, authenticateUser);
     // Logged user
     this.router
       .route(`${this.path}/me`)
-      .get(this.userController.getLoggedUser)
-      .patch(updateLoggedUserValidator, this.userController.updateLoggedUser)
-      .delete(this.userController.deleteLoggedUser);
+      .get(authenticateUser, this.userController.getLoggedUser)
+      .patch(authenticateUser, updateLoggedUserValidator, this.userController.updateLoggedUser)
+      .delete(authenticateUser, this.userController.deleteLoggedUser);
+    this.router
+      .route(`${this.path}/profile-picture-upload`)
+      .patch(authenticateUser, imageUpload.single('profilePicture'), this.userController.updateProfileImage);
 
-    this.router.route(`${this.path}/profile-picture-upload`).patch(imageUpload.single('profilePicture'), this.userController.updateProfileImage);
+    // Public
+    this.router.route(`${this.path}/:id`).get(getUserValidator, this.userController.getUser);
 
     // Admin only
+    this.router.use(`${this.path}`, authenticateUser); // protect all routes after this middleware
     this.router.use(`${this.path}`, allowedTo('admin'));
     this.router.route(`${this.path}`).get(this.userController.getUsers).post(createUserValidator, this.userController.createUser);
-
     this.router
       .route(`${this.path}/:id`)
-      .get(getUserValidator, this.userController.getUser)
       .patch(updateUserValidator, this.userController.updateUser)
       .delete(deleteUserValidator, this.userController.deleteUser);
   }

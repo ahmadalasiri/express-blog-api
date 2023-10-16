@@ -54,9 +54,8 @@ class App {
   }
 
   private initializeSwagger() {
-    const baseUrl = '/api/v1';
     if (this.env !== 'production') {
-      this.app.use(`${baseUrl}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+      this.app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
   }
 

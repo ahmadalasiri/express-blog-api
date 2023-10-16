@@ -1,9 +1,9 @@
 export interface IPagination {
   currentPage: number;
+  totalDocuments?: number;
   limit: number;
   skip: number;
   totalPages?: number;
-  totalDocuments?: number;
   hasNextPage?: boolean;
   hasPrevPage?: boolean;
   nextPage?: number;
