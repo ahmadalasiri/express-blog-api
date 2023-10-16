@@ -39,9 +39,10 @@ class UserController {
    *
    **********************************/
   public getUsers = asyncHandler(async (req: Request, res: Response) => {
-    let users = await this.userService.getUsers(req.query);
-    res.status(200).json({ data: users });
+    let results = await this.userService.getUsers(req.query);
+    res.status(200).json({ results: results.users?.length, paginatonResults: results.paginate, data: results.users });
   });
+
   public getUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     let user = await this.userService.getUser(req.params.id);
     if (!user) return next(new HttpException(404, 'No user found'));

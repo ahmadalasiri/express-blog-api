@@ -11,8 +11,8 @@ class PostController {
   constructor(private readonly postService: PostService) {}
 
   public listPosts = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    let posts = await this.postService.getPosts(req.query);
-    res.status(200).json({ results: posts?.length, data: posts });
+    let results = await this.postService.getPosts(req.query);
+    res.status(200).json({ results: results.posts?.length, paginatonResults: results.paginate, data: results.posts });
   });
 
   public getPost = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

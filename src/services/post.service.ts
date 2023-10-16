@@ -3,13 +3,19 @@ import { autoInjectable } from 'tsyringe';
 import { PostDao } from '../DB/dao/post.dao';
 import HttpException from '../exceptions/HttpException';
 import { IPost, IPostUpdate } from '../interfaces/post.interface';
-import APIFeatures from '../utils/apifeatures';
+import { IPagination } from '../interfaces/respons.interface';
+import APIFeatures from '../utils/apiFeatures';
 
 @autoInjectable()
 class PostService {
   constructor(private readonly postDao: PostDao) {}
 
-  public getPosts = async (reqQuery: any): Promise<IPost[] | null> => {
+  public getPosts = async (
+    reqQuery: any
+  ): Promise<{
+    posts: IPost[] | null;
+    paginate: IPagination;
+  }> => {
     let apiFeatures = new APIFeatures(reqQuery);
     let query = apiFeatures.filter();
     let paginate = apiFeatures.paginate();
@@ -19,7 +25,14 @@ class PostService {
     if (reqQuery.keyword) {
       query = { ...query, $or: [{ content: { $regex: reqQuery.keyword, $options: 'i' } }, { title: { $regex: reqQuery.keyword, $options: 'i' } }] };
     }
-    return await this.postDao.listPosts(query, paginate, sort, fields);
+
+    let countPosts = await this.postDao.countPosts(query);
+
+    if (countPosts) paginate = apiFeatures.paginate(countPosts); // update the pagination object with the total documents
+
+    let posts = await this.postDao.listPosts(query, paginate, sort, fields);
+
+    return { posts, paginate };
   };
 
   public getPost = async (id: string): Promise<IPost | null> => {

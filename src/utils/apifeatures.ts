@@ -1,3 +1,5 @@
+import { IPagination } from '../interfaces/respons.interface';
+
 class APIFeatures {
   constructor(private reqQuery: any) {}
 
@@ -14,13 +16,29 @@ class APIFeatures {
     return query;
   }
 
-  paginate() {
+  paginate(countDocuments: number = 0) {
     // 2- Pagination
     let page = parseInt(this.reqQuery.page) || 1;
     let limit = parseInt(this.reqQuery.limit) || 10;
     let skip = (page - 1) * limit;
 
-    return { skip, limit };
+    // Pagination result
+    let pagination: IPagination = {
+      currentPage: page,
+      limit,
+      skip,
+    };
+
+    if (countDocuments === 0) return pagination;
+
+    pagination.totalPages = Math.ceil(countDocuments / limit); // round up to the nearest integer
+    pagination.totalDocuments = countDocuments;
+    pagination.hasNextPage = page < pagination.totalPages;
+    pagination.hasPrevPage = page > 1;
+    pagination.nextPage = page + 1;
+    pagination.prevPage = page - 1;
+
+    return pagination;
   }
   sort() {
     // 3- Sorting

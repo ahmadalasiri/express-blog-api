@@ -4,15 +4,19 @@ import { autoInjectable } from 'tsyringe';
 
 import UserDao from '../DB/dao/user.dao';
 import HttpException from '../exceptions/HttpException';
+import { IPagination } from '../interfaces/respons.interface';
 import { IUser } from '../interfaces/user.interface';
-import APIFeatures from '../utils/apifeatures';
+import APIFeatures from '../utils/apiFeatures';
 import { cloudinaryDeleteImage, cloudinaryUploadImage } from '../utils/cloudinary';
 
 @autoInjectable()
 class UserService {
   constructor(private userDao: UserDao) {}
 
-  async getUsers(reqQuery: any) {
+  async getUsers(reqQuery: any): Promise<{
+    users: IUser[] | null;
+    paginate: IPagination;
+  }> {
     let apiFeatures = new APIFeatures(reqQuery);
     let query = apiFeatures.filter();
     let paginate = apiFeatures.paginate();
@@ -23,7 +27,10 @@ class UserService {
     //   query = { ...query, bio: { $regex: reqQuery.keyword, $options: 'i' } };
     // }
 
-    return await this.userDao.listUsers(query, paginate, sort, fields);
+    let users = await this.userDao.listUsers(query, paginate, sort, fields);
+    if (users) paginate = apiFeatures.paginate(users.length); // update the pagination object with the total documents
+
+    return { users, paginate };
   }
 
   async getUser(userId: string) {

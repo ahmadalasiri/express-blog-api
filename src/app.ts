@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
@@ -41,6 +42,9 @@ class App {
       this.app.use(morgan('dev'));
     }
     this.app.use(express.json());
+    // Enable other domains to access application
+    this.app.use(cors());
+    this.app.options('*', cors());
   }
 
   private initializeRoutes(routes: Routes[]) {
@@ -50,8 +54,9 @@ class App {
   }
 
   private initializeSwagger() {
-    if (this.env === 'development') {
-      this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    const baseUrl = '/api/v1';
+    if (this.env !== 'production') {
+      this.app.use(`${baseUrl}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
   }
 
