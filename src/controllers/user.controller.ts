@@ -34,12 +34,30 @@ class UserController {
   });
 
   public getFollowing = asyncHandler(async (req: AuthRequest, res: Response) => {
-    let results = await this.userService.getFollowing(req.user?._id!);
+    let userId;
+    // Check if the route includes ':id'
+    if (req.params.id) {
+      userId = req.params.id;
+    } else if (req.path === '/me/following') {
+      // If the route is '/me/followers', use the authenticated user's ID
+      userId = req.user?._id;
+    }
+
+    let results = await this.userService.getFollowing(userId!);
     res.status(200).json({ results: results?.following?.length, data: results });
   });
 
   public getFollowers = asyncHandler(async (req: AuthRequest, res: Response) => {
-    let results = await this.userService.getFollowers(req.user?._id!);
+    let userId;
+    // Check if the route includes ':id'
+    if (req.params.id) {
+      userId = req.params.id;
+    } else if (req.path === '/me/followers') {
+      // If the route is '/me/followers', use the authenticated user's ID
+      userId = req.user?._id;
+    }
+
+    let results = await this.userService.getFollowers(userId!);
     res.status(200).json({ results: results?.followers?.length, data: results });
   });
 

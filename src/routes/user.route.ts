@@ -38,8 +38,8 @@ class UserRoute implements Routes {
 
     // Public
     this.router.route(`${this.path}/:id`).get(getUserValidator, this.userController.getUser);
-    // this.router.route(`${this.path}/:id/following`).get(authenticateUser, this.userController.getFollowing);
-    // this.router.route(`${this.path}/:id/followers`).get(authenticateUser, this.userController.getFollowers);
+    this.router.route(`${this.path}/:id/following`).get(authenticateUser, this.userController.getFollowing);
+    this.router.route(`${this.path}/:id/followers`).get(authenticateUser, this.userController.getFollowers);
 
     // Admin only
     this.router.use(`${this.path}`, authenticateUser); // protect all routes after this middleware
