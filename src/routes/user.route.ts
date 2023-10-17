@@ -23,12 +23,23 @@ class UserRoute implements Routes {
       .get(authenticateUser, this.userController.getLoggedUser)
       .patch(authenticateUser, updateLoggedUserValidator, this.userController.updateLoggedUser)
       .delete(authenticateUser, this.userController.deleteLoggedUser);
+
     this.router
       .route(`${this.path}/profile-picture-upload`)
       .patch(authenticateUser, imageUpload.single('profilePicture'), this.userController.updateProfileImage);
 
+    this.router.route(`${this.path}/me/following`).get(authenticateUser, this.userController.getFollowing);
+    this.router.route(`${this.path}/me/followers`).get(authenticateUser, this.userController.getFollowers);
+    this.router.route(`${this.path}/me/follow`).post(authenticateUser, this.userController.followUser);
+    this.router.route(`${this.path}/me/unfollow`).post(authenticateUser, this.userController.unfollowUser);
+
+    // this.router.route(`${this.path}/me/notifications`).get(this.userController.getNotifications);
+    // this.router.route(`${this.path}/notifications/:notificationId`).patch(this.userController.markNotificationRead);
+
     // Public
     this.router.route(`${this.path}/:id`).get(getUserValidator, this.userController.getUser);
+    // this.router.route(`${this.path}/:id/following`).get(authenticateUser, this.userController.getFollowing);
+    // this.router.route(`${this.path}/:id/followers`).get(authenticateUser, this.userController.getFollowers);
 
     // Admin only
     this.router.use(`${this.path}`, authenticateUser); // protect all routes after this middleware

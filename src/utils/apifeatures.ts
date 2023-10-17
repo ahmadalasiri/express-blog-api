@@ -32,11 +32,11 @@ class APIFeatures {
     if (countDocuments === 0) return pagination;
 
     pagination.totalPages = Math.ceil(countDocuments / limit); // round up to the nearest integer
-    // pagination.totalDocuments = countDocuments;
-    // pagination.hasNextPage = page < pagination.totalPages;
-    // pagination.hasPrevPage = page > 1;
-    // pagination.nextPage = page + 1;
-    // pagination.prevPage = page - 1;
+    pagination.totalDocuments = countDocuments;
+    pagination.hasNextPage = page < pagination.totalPages;
+    pagination.hasPrevPage = page > 1;
+    pagination.nextPage = page + 1;
+    pagination.prevPage = page - 1;
 
     return pagination;
   }

@@ -84,5 +84,39 @@ class UserService {
     fs.unlinkSync(filePath);
     return user;
   }
+
+  async getFollowing(userId: string) {
+    let following = await this.userDao.getFollowing(userId);
+    return following;
+  }
+
+  async getFollowers(userId: string) {
+    let followers = await this.userDao.getFollowers(userId);
+    return followers;
+  }
+
+  async followUser(userId: string, userToFollowId: string) {
+    let isUserExists = await this.userDao.getUserById(userToFollowId);
+    if (!isUserExists) throw new HttpException(404, `There is no user with id ${userToFollowId}`);
+
+    // add userToFollowId to the following array of userId
+    let user = await this.userDao.addToFollowing(userId, userToFollowId);
+    // add userId to the followers array of userToFollowId
+    await this.userDao.addToFollowers(userToFollowId, userId);
+
+    return user;
+  }
+
+  async unfollowUser(userId: string, userToUnfollowId: string) {
+    let isUserExists = await this.userDao.getUserById(userToUnfollowId);
+    if (!isUserExists) throw new HttpException(404, `There is no user with id ${userToUnfollowId}`);
+
+    // remove userToUnfollowId from the following array of userId
+    let user = await this.userDao.removeFromFollowing(userId, userToUnfollowId);
+    // remove userId from the followers array of userToUnfollowId
+    await this.userDao.removeFromFollowers(userToUnfollowId, userId);
+    return user;
+  }
 }
+
 export { UserService };

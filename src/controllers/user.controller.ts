@@ -33,6 +33,26 @@ class UserController {
     res.status(200).json({ data: user });
   });
 
+  public getFollowing = asyncHandler(async (req: AuthRequest, res: Response) => {
+    let results = await this.userService.getFollowing(req.user?._id!);
+    res.status(200).json({ results: results?.following?.length, data: results });
+  });
+
+  public getFollowers = asyncHandler(async (req: AuthRequest, res: Response) => {
+    let results = await this.userService.getFollowers(req.user?._id!);
+    res.status(200).json({ results: results?.followers?.length, data: results });
+  });
+
+  public followUser = asyncHandler(async (req: AuthRequest, res: Response) => {
+    let user = await this.userService.followUser(req.user?._id!, req.body.userId);
+    res.status(200).json({ data: user });
+  });
+
+  public unfollowUser = asyncHandler(async (req: AuthRequest, res: Response) => {
+    let user = await this.userService.unfollowUser(req.user?._id!, req.body.userId);
+    res.status(200).json({ data: user });
+  });
+
   /**********************************
    *
    *    Admin
@@ -40,7 +60,7 @@ class UserController {
    **********************************/
   public getUsers = asyncHandler(async (req: Request, res: Response) => {
     let results = await this.userService.getUsers(req.query);
-    res.status(200).json({ results: results.users?.length, paginatonResults: results.paginate, data: results.users });
+    res.status(200).json({ results: results.users?.length, _metadata: results.paginate, data: results.users });
   });
 
   public getUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

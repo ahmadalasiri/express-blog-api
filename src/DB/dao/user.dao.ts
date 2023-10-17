@@ -36,6 +36,38 @@ class UserDao {
   async delete(userId: string): Promise<IUser | null> {
     return await UserModel.findByIdAndDelete(userId).lean();
   }
+
+  async getFollowing(userId: string): Promise<IUser | null> {
+    let user = await UserModel.findById(userId)
+      .select('following username profilePicture')
+      .populate('following', 'username bio profilePicture')
+      .lean();
+    return user;
+  }
+
+  async getFollowers(userId: string): Promise<IUser | null> {
+    let followers = await UserModel.findById(userId).select('followers').populate('followers', 'username bio profilePicture').lean();
+    return followers;
+  }
+
+  async addToFollowing(userId: string, followingId: string): Promise<IUser | null> {
+    let user = await UserModel.findByIdAndUpdate(userId, { $addToSet: { following: followingId } }, { new: true }).select('following');
+    return user;
+  }
+
+  async addToFollowers(userId: string, followerId: string) {
+    await UserModel.findByIdAndUpdate(userId, { $addToSet: { followers: followerId } });
+  }
+
+  async removeFromFollowing(userId: string, followingId: string): Promise<IUser | null> {
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, { $pull: { following: followingId } }, { new: true }).select('following');
+
+    return updatedUser;
+  }
+
+  removeFromFollowers(userId: string, followerId: string) {
+    return UserModel.findByIdAndUpdate(userId, { $pull: { followers: followerId } });
+  }
 }
 
 export default UserDao;

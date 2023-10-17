@@ -12,7 +12,7 @@ class PostController {
 
   public listPosts = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     let results = await this.postService.getPosts(req.query);
-    res.status(200).json({ results: results.posts?.length, paginatonResults: results.paginate, data: results.posts });
+    res.status(200).json({ results: results.posts?.length, _metadata: results.paginate, data: results.posts });
   });
 
   public getPost = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
