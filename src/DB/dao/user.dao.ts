@@ -38,10 +38,7 @@ class UserDao {
   }
 
   async getFollowing(userId: string): Promise<IUser | null> {
-    let user = await UserModel.findById(userId)
-      .select('following username profilePicture')
-      .populate('following', 'username bio profilePicture')
-      .lean();
+    let user = await UserModel.findById(userId).select('following').populate('following', 'username bio profilePicture').lean();
     return user;
   }
 

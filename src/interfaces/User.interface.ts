@@ -1,3 +1,8 @@
+export enum UserType {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}
+
 export interface IUser {
   _id?: string;
   name: string;
@@ -9,13 +14,14 @@ export interface IUser {
     publicId: string | null;
   };
   bio: string;
-  role: string;
+  role: UserType;
   active: boolean;
   followers: string[];
   following: string[];
 }
 
 export interface IUserDocument extends IUser, Document {}
+
 export interface IUserUpdate {
   firstName?: string;
   lastName?: string;
