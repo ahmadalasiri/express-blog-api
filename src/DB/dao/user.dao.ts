@@ -66,5 +66,4 @@ class UserDao {
     return UserModel.findByIdAndUpdate(userId, { $pull: { followers: followerId } });
   }
 }
-
 export default UserDao;
