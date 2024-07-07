@@ -2,9 +2,9 @@
 
 ## Introduction
 
-A Blog API designed to clone the main features of the popular blogging platform, Medium. It includes various endpoints for managing blog posts, user authentication, and user profiles.
+A Blog API designed to clone the main features of the popular blogging platform, Medium. It includes various endpoints for managing blog posts, user authentication, user profiles, and user follow relationships.
 
-## Technologies Used
+## Tech Stack:
 
 - TypeScript
 - Node.js
